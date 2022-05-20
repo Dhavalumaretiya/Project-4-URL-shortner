@@ -28,7 +28,7 @@ redisClient.on("connect", async function () {
 const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
 const GET_ASYNC = promisify(redisClient.GET).bind(redisClient)
 
-const createUser = async function (req, res) {
+const createUrl = async function (req, res) {
   try {
 
     let long_url = req.body.longUrl;
@@ -81,56 +81,11 @@ const createUser = async function (req, res) {
   }
 };
 
- 
 
 
-
-
-// const createUser = async function (req, res) {
-//   const localurl = 'http:localhost:3000'
-//   const urlCode = shortid.generate() 
-//   let {longUrl} = req.body
-//   if(!validUrl.isUri(longUrl)){
-//    return res.status(400).send({ status:false ,msg: " longUrl is reqired" })
-//   }
-//   let url = await userModel.findOne({longUrl})
-
-//   if(url){
-//     return res.send({data:url})
-//   }
-
-//   const shortUrl= localurl +'/'+ urlCode
-//   url = new userModel({ longUrl, shortUrl, urlCode, }), await url.save()
-//   res.send(url)
-  
-// }
-// // const fetchAuthorProfile = async function (req, res) {
-//   let cahcedProfileData = await GET_ASYNC(`${req.params.authorId}`)
-//   if(cahcedProfileData) {
-//     res.send(cahcedProfileData)
-//   } else {
-//     let profile = await authorModel.findById(req.params.authorId);
-//     await SET_ASYNC(`${req.params.authorId}`, JSON.stringify(profile))
-//     res.send({ data: profile });
-//   }
-
-
-
-// const getUrl = async function (req, res) {
-//       try {
-//           const url = await userModel.findOne({ urlCode: req.params.urlCode });
-//           if (url) {
-//               return res.redirecting(url.longUrl)
-//           } else {
-//               res.status(400).send({ status: false, message: "No Url found." });
-//           }
-//       } catch (err) {
-//           res.status(500).send({ status: false, message: "Server not responding", error: err.message });
-//       }
-//   }
 const getUrl = async function (req, res) {
   const getDataFromCache = await GET_ASYNC(`${req.params.urlCode}`);
-  let url = JSON.parse(getDataFromCache)          //// ------->>> have doubt about this line...!!!
+  let url = JSON.parse(getDataFromCache)        
   if (url) {
     // console.log(getDataFromCache)
     return res.status(302).redirect(url.longUrl);
@@ -149,4 +104,4 @@ const getUrl = async function (req, res) {
   
 
 
-module.exports = { createUser ,getUrl}
+module.exports = { createUrl ,getUrl}
